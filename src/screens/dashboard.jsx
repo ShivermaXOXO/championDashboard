@@ -1,4 +1,7 @@
-import { Container, Header, ListingWrapper, Search, Menu, Filter, Card } from "./dashboardStyles";
+import { IconButton, TextField } from "@mui/material";
+import { Container, Header, ListingWrapper, Search, Menu, Filter, Card ,SearchWrapper, IconWrapper} from "./dashboardStyles";
+import  FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import SortIcon from '@mui/icons-material/Sort';
 const obj = [
   {
     id: 244,
@@ -46,9 +49,18 @@ const Dashboard = () => {
     <Container>
       <Header>
         <Search>
+         <SearchWrapper>
+         <TextField
+          id="outlined-basic"
+          variant="outlined"
+          fullWidth
+          label="Search"
+        />
+        </SearchWrapper>
         </Search>
-        <Menu></Menu>
-        <Filter></Filter>
+        <IconWrapper><FormatListBulletedIcon fontSize="large"/></IconWrapper>
+        <IconWrapper><SortIcon fontSize="large"/></IconWrapper>
+        
       </Header>
       <ListingWrapper>
         {

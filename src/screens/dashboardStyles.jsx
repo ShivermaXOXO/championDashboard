@@ -10,7 +10,6 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.div`
-background-color:red;
 display: flex;
 flex: 0.1;
 margin:5px;
@@ -18,22 +17,26 @@ margin:5px;
 
 
 export const Search = styled.div`
-background-color:yellow;
+
 display: flex;
-flex: 0.8
+flex: 0.8;
+align-items: center;
+justify-content: center;
 `;
 
-export const Menu = styled.div`
-background-color:red;
-display: flex;
-flex: 0.1
+export const SearchWrapper = styled.div`
+width:80%;
 `;
 
-export const Filter = styled.div`
-background-color:pink;
+export const IconWrapper = styled.div`
+
 display: flex;
-flex: 0.1
+flex: 0.1;
+justify-content:center;
+align-items:center;
 `;
+
+
 
 export const ListingWrapper = styled.div`
     background-color: blue;
