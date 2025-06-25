@@ -1,11 +1,66 @@
-import React from 'react'
+import { Container, Header, ListingWrapper, Search, Menu, Filter, Card } from "./dashboardStyles";
+const obj = [
+  {
+    id: 244,
+    Name: "shiv",
 
-function Dashboard() {
+  },
+  {
+    id: 245,
+    Name: "shivsdfsam",
+
+  }, {
+    id: 246,
+    Name: "shivdfsam",
+
+  }, {
+    id: 247,
+    Name: "shivsdfam",
+
+  }, {
+    id: 248,
+    Name: "shivasdfsdm",
+
+  }, {
+    id: 249,
+    Name: "shivaxvxm",
+
+  }, {
+    id: 25,
+    Name: "shivamAsws",
+
+  }, {
+    id: 255,
+    Name: "archit",
+
+  }, {
+    id: 235,
+    Name: "dev",
+
+  },
+];
+
+const Dashboard = () => {
+
   return (
-    <div style={{ display: 'flex', backgroundColor: 'red', flex: 1 }}>
-      <p>my name is</p>
-    </div>
-  )
-}
+    <Container>
+      <Header>
+        <Search>
+        </Search>
+        <Menu></Menu>
+        <Filter></Filter>
+      </Header>
+      <ListingWrapper>
+        {
+          obj.map((item, index) => <Card>{
+            <p key={index}>{item.Name}</p>
+          }</Card>)}
 
-export default Dashboard
+      </ListingWrapper>
+
+
+    </Container>
+  );
+};
+
+export default Dashboard;
