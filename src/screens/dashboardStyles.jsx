@@ -39,7 +39,6 @@ align-items:center;
 
 
 export const ListingWrapper = styled.div`
-    background-color: blue;
     display: flex
 ;
     flex: 0.9;
@@ -51,9 +50,60 @@ export const ListingWrapper = styled.div`
 `;
 export const Card = styled.div`
   width: 250px;
-  height:300px;
+  height:450px;
+  display:flex;
+  flex-direction:column;
   border-radius: 12px;
   margin:20px 0;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  background-color: #fff;
 `;
+export const CardImgWrapper = styled.div`
+  
+  display:flex;
+  flex:0.7;
+`;
+export const CardDetailWrapper = styled.div`
+  display:flex;
+  flex:0.2;
+`;
+export const CardAvatarWrapper = styled.div`
+  display:flex;
+  flex-direction:row;
+  flex:0.3;
+  align-items:center;
+  justify-content:center;
+`;
+
+export const CardNameWrapper = styled.div`
+  display:flex;
+  flex-direction:column;
+  flex:0.7;
+`;
+export const CharacterNameWrapper = styled.div`
+  display:flex;
+  ${'' /* flex-direction:row; */}
+  flex:0.5;
+  align-items:${(props) => props.alignItem};
+  font-weight:${(props) => props.fontWeight};
+  color:${(props) => props.fontColor};
+`;
+
+export const CardAvatar = styled.img`
+  height:40px;
+  width:40px;
+  border-radius:20px;
+  src:${(props) => props.src}
+`;
+
+export const CardImg = styled.img`
+height:330px;
+width:250px;
+src:${(props) => props.src}
+`;
+
+export const ButtonWrapper = styled.div`
+  display:flex;
+  justify-content: space-around;
+  flex:0.1;
+`;
+
