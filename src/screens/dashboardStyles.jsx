@@ -17,7 +17,6 @@ margin:5px;
 
 
 export const Search = styled.div`
-
 display: flex;
 flex: 0.8;
 align-items: center;
@@ -46,6 +45,15 @@ export const ListingWrapper = styled.div`
     justify-content: space-evenly;
     /* height: 500px; */
     overflow: auto;
+  
+`;
+export const LoaderWrapper = styled.div`
+    display: flex;
+    flex: 0.9;
+    align-items:center;
+    justify-content: center;
+    /* height: 500px; */
+    
   
 `;
 export const Card = styled.div`
@@ -83,6 +91,7 @@ export const CharacterNameWrapper = styled.div`
   display:flex;
   ${'' /* flex-direction:row; */}
   flex:0.5;
+  font-family:math;
   align-items:${(props) => props.alignItem};
   font-weight:${(props) => props.fontWeight};
   color:${(props) => props.fontColor};
