@@ -1,4 +1,4 @@
-import { CircularProgress, TextField } from "@mui/material";
+import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import { Container, Header, ListingWrapper, Search, Card, SearchWrapper, IconWrapper, CardImgWrapper, CardDetailWrapper, CardImg, CardAvatar, CardAvatarWrapper, CardNameWrapper, CharacterNameWrapper, ButtonWrapper, LoaderWrapper } from "./dashboardStyles";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import SortIcon from '@mui/icons-material/Sort';
@@ -10,35 +10,76 @@ import { apiToken, SERVER_URL } from "../constants/apiConstants";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
+  const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");
+
+
 
   useEffect(() => {
     setLoading(true);
-    fetch(SERVER_URL + 'sort=armor&page=1&per_page=50' + apiToken,)
-      .then(res => res.json())
-      .then(res => {
-        console.log(res)
-        setData(res)
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err)
-        setLoading(false)
-      });
 
+    const url = `${SERVER_URL}?sort=armor&page=1&per_page=50&${apiToken}`;
+
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("API Response:", data);
+        setData(data);
+      })
+      .catch((error) => {
+        console.error("Fetch Error:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
+
+
+
+
+  const details = data.filter(r =>
+    r.name.toLowerCase().includes(inputValue.toLowerCase())
+  )
+  console.log(details)
+
+
 
   return (
     <Container>
       <Header>
         <Search>
           <SearchWrapper>
-
-            <TextField
+            <Autocomplete
+              freeSolo
+              options={details}
+              getOptionLabel={(details) => {
+                if (typeof details === "string") return details;
+                if (details && typeof details === "object" && details.name) return details.name;
+                return "";
+              }}
+              inputValue={inputValue}
+              onInputChange={(e, newValue) => {
+                setInputValue(newValue);
+              }}
+              value={selectedValue}
+              onChange={(e, newValue) => {
+                setSelectedValue(newValue || "");
+              }}
+              renderInput={(params) => (
+                <TextField {...params}
               id="outlined-basic"
               variant="outlined"
               fullWidth
               label="Search"
+
+                />
+              )}
             />
           </SearchWrapper>
         </Search>
