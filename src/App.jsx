@@ -6,10 +6,8 @@ import Dashboard from "./screens/dashboard.jsx";
 import Favourite from "./screens/favourite.jsx";
 
 
-const root = document.getElementById("root");
 function App(){
-  return(
-ReactDOM.createRoot(root).render(
+  return (
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Dashboard />} />
@@ -17,6 +15,6 @@ ReactDOM.createRoot(root).render(
 
     </Routes>
   </BrowserRouter>
-));
+  );
 }
 export default App;
