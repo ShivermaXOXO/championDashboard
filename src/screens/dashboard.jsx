@@ -4,7 +4,7 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import SortIcon from '@mui/icons-material/Sort';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { apiToken, SERVER_URL } from "../constants/apiConstants";
 import ChampionCard from "../components/championCard";
 
@@ -15,6 +15,7 @@ const Dashboard = () => {
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedChampion, setSelectedChampion] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [debouncedInputValue, setdebouncedInputValue] = useState('');
 
   useEffect(() => {
     setLoading(true);
@@ -37,13 +38,32 @@ const Dashboard = () => {
         setLoading(false);
       });
   }, []);
-  const details = data.filter(r =>
-    r.name.toLowerCase().includes(inputValue.toLowerCase())
-  )
 
   const handleCloseButton = () => {
     setOpenModal(false);
   }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setdebouncedInputValue(inputValue);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [inputValue]);
+
+  const details = useMemo(() => {
+    if (!debouncedInputValue) return [];
+    return data.filter((r) =>
+      r.name.toLowerCase().includes(debouncedInputValue.toLowerCase())
+    );
+  }, [debouncedInputValue, data]);
+
+  const detailsMap = useMemo(() => {
+    const map = {}
+    data.forEach((r) => {
+      map[r.name.toLowerCase().trim()] = r
+    })
+    return map;
+  }, [data]);
   return (
     <Container>
       <Header>
@@ -63,9 +83,31 @@ const Dashboard = () => {
               }}
               value={selectedValue}
               onChange={(e, newValue) => {
-                setSelectedValue(newValue || "");
-                setSelectedChampion(newValue)
-                setOpenModal(true);
+                if (newValue && newValue.name) {
+                  setOpenModal(false);
+                  setTimeout(() => {
+                    setSelectedChampion(newValue);
+                    setOpenModal(true);
+                  },)
+                } else {
+                  setSelectedChampion(null);
+                  setOpenModal(false);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const key = inputValue.toLowerCase().trim();
+                  const match = detailsMap[key];
+
+                  if (match) {
+                    e.preventDefault()
+                    setSelectedChampion(match)
+                    setSelectedValue(match)
+                    setOpenModal(true);
+                  } else {
+                    setOpenModal(false)
+                  }
+                }
               }}
               renderInput={(params) => (
                 <TextField {...params}

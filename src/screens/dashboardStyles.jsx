@@ -167,31 +167,34 @@ export const BaseComponent = css`
     display: ${(props) => props.display};
     flex-direction: ${(props) => props.flexDirection};
     flex: ${(props) => props.flex};
-    align-items:${(props) => props.alignItem};
+    align-items:${(props) => props.alignItems};
     justify-content: ${(props) => props.justifyContent};
     `;
 
 export const ChampLeftSide = styled.div.withConfig({
   shouldForwardProp: (prop) =>
-    !["display", "flexDirection", "flex", "alignItem", "justifyContent"].includes(prop),
+    !["display", "flexDirection", "flex", "alignItems", "justifyContent"].includes(prop),
 })`
     ${BaseComponent}
     `;
 export const ChampRightSide = styled.div.withConfig({
   shouldForwardProp: (prop) =>
-    !["display", "flexDirection", "flex", "alignItem", "justifyContent"].includes(prop),
+    !["display", "flexDirection", "flex", "alignItems", "justifyContent"].includes(prop),
 })`
     ${BaseComponent}
     `;
 
-export const ChampDetailsWrapper = styled.div`
+export const ChampDetailsWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !["display", "gap", "fontSize", "marginLeft", "marginRight", "marginBottom", "marginTop"].includes(prop),
+})`
   display: ${(props) => props.display || "flex"};
   gap: ${(props) => props.gap || "8px"};
   font-size: ${(props) => props.fontSize};
-  margin-left:${(props) => (props.ml !== undefined ? props.ml : "0px")};
-  margin-right:${(props) => props.mr};
-  margin-bottom:${(props) => (props.mb !== undefined ? props.mb : "0px")};
-  margin-top:${(props) => (props.mt !== undefined ? props.mt : "0px")};
+  margin-left:${(props) => (props.marginLeft !== undefined ? props.marginLeft : "0px")};
+  margin-right:${(props) => props.marginRight};
+  margin-bottom:${(props) => (props.marginBottom !== undefined ? props.marginBottom : "0px")};
+  margin-top:${(props) => (props.marginTop !== undefined ? props.marginTop : "0px")};
 `;
 
 export const Info = styled.span`
