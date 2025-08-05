@@ -5,39 +5,17 @@ import SortIcon from '@mui/icons-material/Sort';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useEffect, useState, useMemo } from "react";
-import { apiToken, SERVER_URL } from "../constants/apiConstants";
 import ChampionCard from "../components/championCard";
+import useFetchChampion from "../hooks/usefetchChampion";
 
 const Dashboard = () => {
-  const [data, setData] = useState([]);
+  const { data, loading } = useFetchChampion();
   const [inputValue, setInputValue] = useState("");
-  const [loading, setLoading] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedChampion, setSelectedChampion] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [debouncedInputValue, setdebouncedInputValue] = useState('');
 
-  useEffect(() => {
-    setLoading(true);
-    const url = `${SERVER_URL}?sort=armor&page=1&per_page=50&${apiToken}`;
-    fetch(url)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("API Response:", data);
-        setData(data);
-      })
-      .catch((error) => {
-        console.error("Fetch Error:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
 
   const handleCloseButton = () => {
     setOpenModal(false);
