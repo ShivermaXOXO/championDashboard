@@ -1,48 +1,64 @@
 import { Autocomplete, Box, CircularProgress, Modal, TextField } from "@mui/material";
-import { Container, Header, ListingWrapper, Search, Card, SearchWrapper, IconWrapper, CardImgWrapper, CardDetailWrapper, CardImg, CardAvatar, CardAvatarWrapper, CardNameWrapper, CharacterNameWrapper, ButtonWrapper, LoaderWrapper } from "./dashboardStyles";
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import { Container, Header, ListingWrapper, Search, Card, SearchWrapper, IconWrapper, CardImgWrapper, CardDetailWrapper, CardImg, CardAvatar, CardAvatarWrapper, CardNameWrapper, CharacterNameWrapper, ButtonWrapper, LoaderWrapper, Sort, SortInfo, SortTitle } from "./dashboardStyles";
 import SortIcon from '@mui/icons-material/Sort';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { useEffect, useState } from "react";
-import { apiToken, SERVER_URL } from "../constants/apiConstants";
-import ChampionCard from "../components/championCard";
+import { useEffect, useState, useMemo } from "react";
+import ChampionCard from "../components/ChampionCard";
+import useFetchChampion from "../hooks/usefetchChampion";
+import { ListAlt } from "@mui/icons-material";
 
 const Dashboard = () => {
-  const [data, setData] = useState([]);
+  const { data, loading } = useFetchChampion();
   const [inputValue, setInputValue] = useState("");
-  const [loading, setLoading] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedChampion, setSelectedChampion] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [openSortModal, setSortModal] = useState(false);
+  const [sortData, setSortData] = useState(null);
+  const [debouncedInputValue, setdebouncedInputValue] = useState('');
 
   useEffect(() => {
-    setLoading(true);
-    const url = `${SERVER_URL}?sort=armor&page=1&per_page=50&${apiToken}`;
-    fetch(url)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("API Response:", data);
-        setData(data);
-      })
-      .catch((error) => {
-        console.error("Fetch Error:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-  const details = data.filter(r =>
-    r.name.toLowerCase().includes(inputValue.toLowerCase())
-  )
+    const timer = setTimeout(() => {
+      setdebouncedInputValue(inputValue);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [inputValue]);
+
+  const details = useMemo(() => {
+    if (!debouncedInputValue) return [];
+    return data.filter((r) =>
+      r.name.toLowerCase().includes(debouncedInputValue.toLowerCase())
+    );
+  }, [debouncedInputValue, data]);
+
+  const detailsMap = useMemo(() => {
+    const map = {}
+    data.forEach((r) => {
+      map[r.name.toLowerCase().trim()] = r
+    })
+    return map;
+  }, [data]);
 
   const handleCloseButton = () => {
     setOpenModal(false);
+    setSortModal(false)
+  }
+
+  const handleSortButton = () => {
+    setSortModal(!openSortModal);
+  }
+  const sortAscending = () => {
+    const sorted = [...data].sort((a, b) =>
+      a.name.localeCompare(b.name) && (a.attackdamage - b.attackdamage)
+    )
+    setSortData(sorted)
+  }
+  const sortdescending = () => {
+    const sorted = [...data].sort((a, b) =>
+      b.name.localeCompare(a.name) && (b.attackdamage - a.attackdamage)
+    )
+    setSortData(sorted)
   }
   return (
     <Container>
@@ -63,9 +79,31 @@ const Dashboard = () => {
               }}
               value={selectedValue}
               onChange={(e, newValue) => {
-                setSelectedValue(newValue || "");
-                setSelectedChampion(newValue)
-                setOpenModal(true);
+                if (newValue && newValue.name) {
+                  setOpenModal(false);
+                  setTimeout(() => {
+                    setSelectedChampion(newValue);
+                    setOpenModal(true);
+                  },)
+                } else {
+                  setSelectedChampion(null);
+                  setOpenModal(false);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const key = inputValue.toLowerCase().trim();
+                  const match = detailsMap[key];
+
+                  if (match) {
+                    e.preventDefault()
+                    setSelectedChampion(match)
+                    setSelectedValue(match)
+                    setOpenModal(true);
+                  } else {
+                    setOpenModal(false)
+                  }
+                }
               }}
               renderInput={(params) => (
                 <TextField {...params}
@@ -78,13 +116,27 @@ const Dashboard = () => {
             />
           </SearchWrapper>
         </Search>
-        <IconWrapper><FormatListBulletedIcon fontSize="large" /></IconWrapper>
-        <IconWrapper><SortIcon fontSize="large" /></IconWrapper>
+        <IconWrapper>
+          <ListAlt fontSize="large" />
+        </IconWrapper>
+        <IconWrapper>
+          <SortIcon onClick={handleSortButton} style={{ cursor: "pointer" }} fontSize="large" />
+        </IconWrapper>
+        {openSortModal && (
+          <Sort >
+            <SortTitle>Sort Items</SortTitle>
+            <SortInfo onClick={sortAscending} style={{ cursor: "pointer" }}>A to Z</SortInfo>
+            <SortInfo onClick={sortdescending} style={{ cursor: "pointer" }}>Z to A</SortInfo>
+            <SortInfo onClick={sortdescending} style={{ cursor: "pointer" }}>More Attack Damage First</SortInfo>
+            <SortInfo onClick={sortAscending} style={{ cursor: "pointer" }}>Less Attack Damage First</SortInfo>
+            <SortInfo onClick={handleCloseButton} style={{ cursor: "pointer" }}>Close</SortInfo>
+          </Sort>
+        )}
+
       </Header>
       {loading ? <LoaderWrapper><CircularProgress /></LoaderWrapper> :
         <ListingWrapper>
-        {
-            data.map((item, index) => {
+          {(sortData || data).map((item, index) => {
             return (
               <Card key={index}>
                 <CardImgWrapper>{
