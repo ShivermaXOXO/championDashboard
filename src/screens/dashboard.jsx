@@ -1,12 +1,12 @@
 import { Autocomplete, Box, CircularProgress, Modal, TextField } from "@mui/material";
-import { Container, Header, ListingWrapper, Search, Card, SearchWrapper, IconWrapper, CardImgWrapper, CardDetailWrapper, CardImg, CardAvatar, CardAvatarWrapper, CardNameWrapper, CharacterNameWrapper, ButtonWrapper, LoaderWrapper } from "./dashboardStyles";
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import { Container, Header, ListingWrapper, Search, Card, SearchWrapper, IconWrapper, CardImgWrapper, CardDetailWrapper, CardImg, CardAvatar, CardAvatarWrapper, CardNameWrapper, CharacterNameWrapper, ButtonWrapper, LoaderWrapper, Sort, SortInfo, SortTitle } from "./dashboardStyles";
 import SortIcon from '@mui/icons-material/Sort';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useEffect, useState, useMemo } from "react";
-import ChampionCard from "../components/championCard";
+import ChampionCard from "../components/ChampionCard";
 import useFetchChampion from "../hooks/usefetchChampion";
+import { ListAlt } from "@mui/icons-material";
 
 const Dashboard = () => {
   const { data, loading } = useFetchChampion();
@@ -14,12 +14,9 @@ const Dashboard = () => {
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedChampion, setSelectedChampion] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [openSortModal, setSortModal] = useState(false);
+  const [sortData, setSortData] = useState(null);
   const [debouncedInputValue, setdebouncedInputValue] = useState('');
-
-
-  const handleCloseButton = () => {
-    setOpenModal(false);
-  }
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -42,6 +39,27 @@ const Dashboard = () => {
     })
     return map;
   }, [data]);
+
+  const handleCloseButton = () => {
+    setOpenModal(false);
+    setSortModal(false)
+  }
+
+  const handleSortButton = () => {
+    setSortModal(!openSortModal);
+  }
+  const sortAscending = () => {
+    const sorted = [...data].sort((a, b) =>
+      a.name.localeCompare(b.name) && (a.attackdamage - b.attackdamage)
+    )
+    setSortData(sorted)
+  }
+  const sortdescending = () => {
+    const sorted = [...data].sort((a, b) =>
+      b.name.localeCompare(a.name) && (b.attackdamage - a.attackdamage)
+    )
+    setSortData(sorted)
+  }
   return (
     <Container>
       <Header>
@@ -98,13 +116,27 @@ const Dashboard = () => {
             />
           </SearchWrapper>
         </Search>
-        <IconWrapper><FormatListBulletedIcon fontSize="large" /></IconWrapper>
-        <IconWrapper><SortIcon fontSize="large" /></IconWrapper>
+        <IconWrapper>
+          <ListAlt fontSize="large" />
+        </IconWrapper>
+        <IconWrapper>
+          <SortIcon onClick={handleSortButton} style={{ cursor: "pointer" }} fontSize="large" />
+        </IconWrapper>
+        {openSortModal && (
+          <Sort >
+            <SortTitle>Sort Items</SortTitle>
+            <SortInfo onClick={sortAscending} style={{ cursor: "pointer" }}>A to Z</SortInfo>
+            <SortInfo onClick={sortdescending} style={{ cursor: "pointer" }}>Z to A</SortInfo>
+            <SortInfo onClick={sortdescending} style={{ cursor: "pointer" }}>More Attack Damage First</SortInfo>
+            <SortInfo onClick={sortAscending} style={{ cursor: "pointer" }}>Less Attack Damage First</SortInfo>
+            <SortInfo onClick={handleCloseButton} style={{ cursor: "pointer" }}>Close</SortInfo>
+          </Sort>
+        )}
+
       </Header>
       {loading ? <LoaderWrapper><CircularProgress /></LoaderWrapper> :
         <ListingWrapper>
-        {
-            data.map((item, index) => {
+          {(sortData || data).map((item, index) => {
             return (
               <Card key={index}>
                 <CardImgWrapper>{

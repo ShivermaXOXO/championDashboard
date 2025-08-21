@@ -220,4 +220,32 @@ justify-content:end;
 gap:5px;
 `;
 
+export const Sort = styled.div`
+background-color:white;
+box-shadow:24;
+border-radius:5px;
+display:flex;
+flex-direction:column;
+height:200px;
+width:180px;
+position:absolute;
+top:62px;
+left:88%;
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+`;
 
+export const SortTitle = styled.span`
+display:flex;
+flex:0.5;
+  color:blue;
+  font-weight:bold;
+  font-size:17px;
+  margin-left:8px;
+`;
+export const SortInfo = styled.span`
+  display:flex;
+  flex:0.5;
+  font-size:16px;
+  color:black;
+  margin-left:8px;
+`;
