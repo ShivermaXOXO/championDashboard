@@ -15,7 +15,8 @@ const Dashboard = () => {
   const [selectedChampion, setSelectedChampion] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [openSortModal, setSortModal] = useState(false);
-  const [sortData, setSortData] = useState(null);
+  const [sortBy, setSortBy] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc");
   const [debouncedInputValue, setdebouncedInputValue] = useState('');
 
   useEffect(() => {
@@ -48,18 +49,29 @@ const Dashboard = () => {
   const handleSortButton = () => {
     setSortModal(!openSortModal);
   }
-  const sortAscending = () => {
-    const sorted = [...data].sort((a, b) =>
-      a.name.localeCompare(b.name) && (a.attackdamage - b.attackdamage)
-    )
-    setSortData(sorted)
+
+  const handleSort = (type, order) => {
+    setSortBy(type)
+    setSortOrder(order)
   }
-  const sortdescending = () => {
-    const sorted = [...data].sort((a, b) =>
-      b.name.localeCompare(a.name) && (b.attackdamage - a.attackdamage)
-    )
-    setSortData(sorted)
-  }
+  const sortAscending = useMemo(() => {
+    if (!sortBy) return data;
+    return [...data].sort((a, b) => {
+      if (sortBy === "name") {
+        return sortOrder === "asc" ?
+          a.name.localeCompare(b.name) :
+          b.name.localeCompare(a.name)
+      }
+
+      if (sortBy === "attackDamage") {
+        return sortOrder === "asc" ?
+          a.attackdamage - b.attackdamage :
+          b.attackdamage - a.attackdamage
+      }
+      return 0;
+    })
+  }, [data, sortBy, sortOrder]);
+
   return (
     <Container>
       <Header>
@@ -125,10 +137,10 @@ const Dashboard = () => {
         {openSortModal && (
           <Sort >
             <SortTitle>Sort Items</SortTitle>
-            <SortInfo onClick={sortAscending} style={{ cursor: "pointer" }}>A to Z</SortInfo>
-            <SortInfo onClick={sortdescending} style={{ cursor: "pointer" }}>Z to A</SortInfo>
-            <SortInfo onClick={sortdescending} style={{ cursor: "pointer" }}>More Attack Damage First</SortInfo>
-            <SortInfo onClick={sortAscending} style={{ cursor: "pointer" }}>Less Attack Damage First</SortInfo>
+            <SortInfo onClick={() => handleSort("name", "asc")} style={{ cursor: "pointer" }}>A to Z</SortInfo>
+            <SortInfo onClick={() => handleSort("name", "desc")} style={{ cursor: "pointer" }}>Z to A</SortInfo>
+            <SortInfo onClick={() => handleSort("attackDamage", "desc")} style={{ cursor: "pointer" }}>More Attack Damage First</SortInfo>
+            <SortInfo onClick={() => handleSort("attackDamage", "asc")} style={{ cursor: "pointer" }}>Less Attack Damage First</SortInfo>
             <SortInfo onClick={handleCloseButton} style={{ cursor: "pointer" }}>Close</SortInfo>
           </Sort>
         )}
@@ -136,7 +148,7 @@ const Dashboard = () => {
       </Header>
       {loading ? <LoaderWrapper><CircularProgress /></LoaderWrapper> :
         <ListingWrapper>
-          {(sortData || data).map((item, index) => {
+          {(sortAscending || data).map((item, index) => {
             return (
               <Card key={index}>
                 <CardImgWrapper>{
