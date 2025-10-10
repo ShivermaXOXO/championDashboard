@@ -7,6 +7,7 @@ import { useEffect, useState, useMemo } from "react";
 import ChampionCard from "../components/ChampionCard";
 import useFetchChampion from "../hooks/usefetchChampion";
 import { ListAlt } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { data, loading } = useFetchChampion();
@@ -18,6 +19,9 @@ const Dashboard = () => {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [debouncedInputValue, setdebouncedInputValue] = useState('');
+  const [favourites, SetFavourites] = useState([])
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -72,6 +76,18 @@ const Dashboard = () => {
     })
   }, [data, sortBy, sortOrder]);
 
+  const addToFavourites = (champion) => {
+    if (!favourites.find(fav => fav.id === champion.id)) {
+      SetFavourites([...favourites, champion]);
+    }
+  }
+
+  const favButton = () => {
+    navigate('/fav');
+  }
+  useEffect(() => {
+    console.log('Favourites updated:', favourites);
+  }, [favourites])
   return (
     <Container>
       <Header>
@@ -119,9 +135,9 @@ const Dashboard = () => {
               }}
               renderInput={(params) => (
                 <TextField {...params}
-              id="outlined-basic"
-              variant="outlined"
-              fullWidth
+                  id="outlined-basic"
+                  variant="outlined"
+                  fullWidth
                   label="Search"
                 />
               )}
@@ -129,7 +145,7 @@ const Dashboard = () => {
           </SearchWrapper>
         </Search>
         <IconWrapper>
-          <ListAlt fontSize="large" />
+          <ListAlt onClick={favButton} fontSize="large" />
         </IconWrapper>
         <IconWrapper>
           <SortIcon onClick={handleSortButton} style={{ cursor: "pointer" }} fontSize="large" />
@@ -156,8 +172,8 @@ const Dashboard = () => {
                   } />
                 }
                 </CardImgWrapper>
-                <CardDetailWrapper>
-                  <CardAvatarWrapper>
+                <CardDetailWrapper flex="0.2">
+                  <CardAvatarWrapper flex="0.3">
                     <CardAvatar src={item.
                       image_url
                     }></CardAvatar>
@@ -172,7 +188,7 @@ const Dashboard = () => {
                   </CardNameWrapper>
                   </CardDetailWrapper>
                   <ButtonWrapper>
-                    <ShoppingCartIcon cursor="pointer" onClick={() => window.alert("hello")}></ShoppingCartIcon>
+                  <ShoppingCartIcon cursor="pointer" onClick={() => addToFavourites(item)}></ShoppingCartIcon>
                     <DeleteIcon cursor="pointer" onClick={() => window.alert("hello")}></DeleteIcon>
                   </ButtonWrapper>
                 </Card>

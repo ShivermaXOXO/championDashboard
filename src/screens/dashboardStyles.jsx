@@ -70,22 +70,34 @@ export const CardImgWrapper = styled.div`
   display:flex;
   flex:0.7;
 `;
-export const CardDetailWrapper = styled.div`
+export const CardDetailWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !["height", "display", "flex", "backgroundColor"].includes(prop),
+})`
   display:flex;
-  flex:0.2;
+  flex:${(props) => props.flex};
+  background-color:${(props) => props.backgroundColor};
+  height:${(props) => props.height};
 `;
-export const CardAvatarWrapper = styled.div`
+export const CardAvatarWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !["flex"].includes(prop),
+})`
   display:flex;
   flex-direction:row;
-  flex:0.3;
+  flex:${(props) => props.flex};
   align-items:center;
   justify-content:center;
 `;
 
-export const CardNameWrapper = styled.div`
+export const CardNameWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !["flex"].includes(prop),
+})`
   display:flex;
   flex-direction:column;
-  flex:0.7;
+  flex:${(props) => props.flex};
+  background-color:lightgrey;
 `;
 export const CharacterNameWrapper = styled.div.withConfig({
   shouldForwardProp: (prop) =>
@@ -248,4 +260,22 @@ export const SortInfo = styled.span`
   font-size:16px;
   color:black;
   margin-left:8px;
+`;
+
+export const Remove = styled.div`
+display:flex;
+flex:0.1;
+align-items:center;
+justify-content:center;
+font-size:16px;
+color:red;
+`;
+
+export const FavHeader = styled.div`
+display:flex;
+flex:0.1;
+height:90px;
+font-size:20px;
+font-weight:bold;
+align-items:center;
 `;
