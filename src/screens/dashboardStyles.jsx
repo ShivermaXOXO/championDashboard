@@ -97,7 +97,7 @@ export const CardNameWrapper = styled.div.withConfig({
   display:flex;
   flex-direction:column;
   flex:${(props) => props.flex};
-  background-color:lightgrey;
+  justify-content:center;
 `;
 export const CharacterNameWrapper = styled.div.withConfig({
   shouldForwardProp: (prop) =>

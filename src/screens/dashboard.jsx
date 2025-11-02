@@ -8,6 +8,7 @@ import ChampionCard from "../components/ChampionCard";
 import useFetchChampion from "../hooks/usefetchChampion";
 import { ListAlt } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useFavourites } from "../context/FavouriteContext";
 
 const Dashboard = () => {
   const { data, loading } = useFetchChampion();
@@ -19,8 +20,7 @@ const Dashboard = () => {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [debouncedInputValue, setdebouncedInputValue] = useState('');
-  const [favourites, SetFavourites] = useState([])
-
+  const { favourites, addToFavourites, removeFromFavourites } = useFavourites();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,15 +76,9 @@ const Dashboard = () => {
     })
   }, [data, sortBy, sortOrder]);
 
-  const addToFavourites = (champion) => {
-    if (!favourites.find(fav => fav.id === champion.id)) {
-      SetFavourites([...favourites, champion]);
-    }
-  }
-
   const favButton = () => {
-    navigate('/fav');
-  }
+    navigate('/fav', { state: { favourites } });
+  };
   useEffect(() => {
     console.log('Favourites updated:', favourites);
   }, [favourites])
@@ -165,6 +159,7 @@ const Dashboard = () => {
       {loading ? <LoaderWrapper><CircularProgress /></LoaderWrapper> :
         <ListingWrapper>
           {(sortAscending || data).map((item, index) => {
+            const isFav = favourites.some((fav) => fav.id === item.id);
             return (
               <Card key={index}>
                 <CardImgWrapper>{
@@ -188,7 +183,7 @@ const Dashboard = () => {
                   </CardNameWrapper>
                   </CardDetailWrapper>
                   <ButtonWrapper>
-                  <ShoppingCartIcon cursor="pointer" onClick={() => addToFavourites(item)}></ShoppingCartIcon>
+                  <ShoppingCartIcon cursor="pointer" onClick={() => isFav ? removeFromFavourites(item.id) : addToFavourites(item)}></ShoppingCartIcon>
                     <DeleteIcon cursor="pointer" onClick={() => window.alert("hello")}></DeleteIcon>
                   </ButtonWrapper>
                 </Card>
