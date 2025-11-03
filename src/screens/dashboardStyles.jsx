@@ -130,6 +130,16 @@ export const ButtonWrapper = styled.div`
   flex:0.1;
 `;
 
+export const HoverWrapper = styled.span`
+    display: inline-block; 
+    transition: all 0.3s ease-in-out;
+    
+    &:hover {
+        filter: drop-shadow(0 0 10px white);
+        transform: scale(1.15);
+    }
+`;
+
 export const ChampCardWrapper = styled.div`
   border-radius: 8px;
   height:400px;
@@ -265,9 +275,11 @@ export const SortInfo = styled.span`
 export const Remove = styled.div`
 display:flex;
 flex:0.1;
+cursor:pointer;
 align-items:center;
 justify-content:center;
-font-size:16px;
+font-size:18px;
+font-weight:bold;
 color:red;
 `;
 

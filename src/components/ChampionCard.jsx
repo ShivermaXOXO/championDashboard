@@ -1,11 +1,16 @@
 import { ChampCardDetails, ChampCardFooter, ChampCardHeader, ChampCardWrapper, ChampDetailsWrapper, ChampLeftSide, ChampRightSide, ChampTitle, CloseButton, Img, Info, Value } from "../screens/dashboardStyles";
 import CloseIcon from '@mui/icons-material/Close';
 import { Button } from "@mui/material";
+import { useFavourites } from "../context/FavouriteContext";
+
 const ChampionCard = ({ champions, onClose }) => {
+    const { favourites, addToFavourites, removeFromFavourites } = useFavourites();
 
     return (
         <>
-            {champions.map((item, index) => (
+            {champions.map((item, index) => {
+                const isFav = favourites.some((fav) => fav.id === item.id)
+                return (
                 <ChampCardWrapper key={index}>
                     <ChampCardHeader>
                         <ChampTitle>{item.name}</ChampTitle>
@@ -44,11 +49,14 @@ const ChampionCard = ({ champions, onClose }) => {
                         </ChampRightSide>
                     </ChampCardDetails>
                     <ChampCardFooter>
-                        <Button variant="outlined">Remove from fav</Button>
-                        <Button variant="outlined">Add to fav</Button>
+                            {isFav ? (
+                                <Button variant="outlined" onClick={() => removeFromFavourites(item.id)}>Remove from fav</Button>
+                            ) : (<Button variant="outlined" onClick={() => addToFavourites(item)}>Add to fav</Button>
+                            )}
                     </ChampCardFooter>
                 </ChampCardWrapper>
-            ))}
+                )
+            })}
 
         </>
     )

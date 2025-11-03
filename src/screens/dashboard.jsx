@@ -1,5 +1,5 @@
 import { Autocomplete, Box, CircularProgress, Modal, TextField } from "@mui/material";
-import { Container, Header, ListingWrapper, Search, Card, SearchWrapper, IconWrapper, CardImgWrapper, CardDetailWrapper, CardImg, CardAvatar, CardAvatarWrapper, CardNameWrapper, CharacterNameWrapper, ButtonWrapper, LoaderWrapper, Sort, SortInfo, SortTitle } from "./dashboardStyles";
+import { Container, Header, ListingWrapper, Search, Card, SearchWrapper, IconWrapper, CardImgWrapper, CardDetailWrapper, CardImg, CardAvatar, CardAvatarWrapper, CardNameWrapper, CharacterNameWrapper, ButtonWrapper, LoaderWrapper, Sort, SortInfo, SortTitle, HoverWrapper } from "./dashboardStyles";
 import SortIcon from '@mui/icons-material/Sort';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useFavourites } from "../context/FavouriteContext";
 
 const Dashboard = () => {
-  const { data, loading } = useFetchChampion();
+  const { data, loading, setData } = useFetchChampion();
   const [inputValue, setInputValue] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedChampion, setSelectedChampion] = useState(null);
@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [debouncedInputValue, setdebouncedInputValue] = useState('');
-  const { favourites, addToFavourites, removeFromFavourites } = useFavourites();
+  const { favourites, addToFavourites } = useFavourites();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +44,10 @@ const Dashboard = () => {
     })
     return map;
   }, [data]);
+
+  const removeButton = (id) => {
+    setData((prevData) => prevData.filter((item) => item.id !== id));
+  }
 
   const handleCloseButton = () => {
     setOpenModal(false);
@@ -139,12 +143,15 @@ const Dashboard = () => {
           </SearchWrapper>
         </Search>
         <IconWrapper>
-          <ListAlt onClick={favButton} fontSize="large" />
+          <HoverWrapper><ListAlt onClick={favButton} fontSize="large" /></HoverWrapper>
         </IconWrapper>
         <IconWrapper>
-          <SortIcon onClick={handleSortButton} style={{ cursor: "pointer" }} fontSize="large" />
+          <HoverWrapper><SortIcon onClick={handleSortButton} style={{ cursor: "pointer" }} fontSize="large" /></HoverWrapper>
         </IconWrapper>
         {openSortModal && (
+          <Modal
+            open={openSortModal}
+            onClose={() => setSortModal(false)}>
           <Sort >
             <SortTitle>Sort Items</SortTitle>
             <SortInfo onClick={() => handleSort("name", "asc")} style={{ cursor: "pointer" }}>A to Z</SortInfo>
@@ -152,14 +159,15 @@ const Dashboard = () => {
             <SortInfo onClick={() => handleSort("attackDamage", "desc")} style={{ cursor: "pointer" }}>More Attack Damage First</SortInfo>
             <SortInfo onClick={() => handleSort("attackDamage", "asc")} style={{ cursor: "pointer" }}>Less Attack Damage First</SortInfo>
             <SortInfo onClick={handleCloseButton} style={{ cursor: "pointer" }}>Close</SortInfo>
-          </Sort>
-        )}
+            </Sort>
+          </Modal>
+
+        )};
 
       </Header>
       {loading ? <LoaderWrapper><CircularProgress /></LoaderWrapper> :
         <ListingWrapper>
           {(sortAscending || data).map((item, index) => {
-            const isFav = favourites.some((fav) => fav.id === item.id);
             return (
               <Card key={index}>
                 <CardImgWrapper>{
@@ -183,8 +191,10 @@ const Dashboard = () => {
                   </CardNameWrapper>
                   </CardDetailWrapper>
                   <ButtonWrapper>
-                  <ShoppingCartIcon cursor="pointer" onClick={() => isFav ? removeFromFavourites(item.id) : addToFavourites(item)}></ShoppingCartIcon>
-                    <DeleteIcon cursor="pointer" onClick={() => window.alert("hello")}></DeleteIcon>
+                  <HoverWrapper>
+                    <ShoppingCartIcon cursor="pointer" onClick={() => addToFavourites(item)}></ShoppingCartIcon></HoverWrapper>
+                  <HoverWrapper><DeleteIcon cursor="pointer" onClick={() => removeButton(item.id)}></DeleteIcon>
+                  </HoverWrapper>
                   </ButtonWrapper>
                 </Card>
               )
