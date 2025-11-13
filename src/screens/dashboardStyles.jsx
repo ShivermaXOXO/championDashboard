@@ -35,26 +35,18 @@ justify-content:center;
 align-items:center;
 `;
 
-
-
 export const ListingWrapper = styled.div`
-    display: flex
-;
+    display: flex;
     flex: 0.9;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    /* height: 500px; */
     overflow: auto;
-  
 `;
 export const LoaderWrapper = styled.div`
     display: flex;
     flex: 0.9;
     align-items:center;
     justify-content: center;
-    /* height: 500px; */
-    
-  
 `;
 export const Card = styled.div`
   width: 250px;
@@ -66,7 +58,6 @@ export const Card = styled.div`
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 `;
 export const CardImgWrapper = styled.div`
-  
   display:flex;
   flex:0.7;
 `;

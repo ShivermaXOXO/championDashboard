@@ -9,7 +9,28 @@ import useFetchChampion from "../hooks/usefetchChampion";
 import { ListAlt } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useFavourites } from "../context/FavouriteContext";
-
+import Nocturne from "../assets/sounds/Nocturne.mp3";
+import alistar from "../assets/sounds/alistar.mp3";
+import ahri from "../assets/sounds/ahri.mp3";
+import viego from "../assets/sounds/viego.mp3";
+import yone from "../assets/sounds/yone.mp3";
+import Taliyah from "../assets/sounds/Taliyah.mp3";
+import smolder from "../assets/sounds/smolder.mp3";
+import seraphine from "../assets/sounds/seraphine.mp3";
+import rammus from "../assets/sounds/rammus.mp3";
+import nilah from "../assets/sounds/nilah.mp3";
+import MissFortune from "../assets/sounds/Miss Fortune.mp3";
+import mel from "../assets/sounds/mel.mp3";
+import MasterYi from "../assets/sounds/Master Yi.mp3";
+import LeeSin from "../assets/sounds/Lee Sin.mp3";
+import kayn from "../assets/sounds/kayn.mp3";
+import katarina from "../assets/sounds/katarina.mp3";
+import kalista from "../assets/sounds/kalista.mp3";
+import Jax from "../assets/sounds/Jax.mp3";
+import JaarvanIV from "../assets/sounds/Jarvan IV.mp3";
+import Irelia from "../assets/sounds/Irelia.mp3";
+import gwen from "../assets/sounds/gwen.mp3";
+import Graves from "../assets/sounds/Graves.mp3";
 const Dashboard = () => {
   const { data, loading, setData } = useFetchChampion();
   const [inputValue, setInputValue] = useState("");
@@ -22,6 +43,31 @@ const Dashboard = () => {
   const [debouncedInputValue, setdebouncedInputValue] = useState('');
   const { favourites, addToFavourites } = useFavourites();
   const navigate = useNavigate();
+
+  const soundMap = {
+    Nocturne: Nocturne,
+    Alistar: alistar,
+    Ahri: ahri,
+    Viego: viego,
+    Yone: yone,
+    Taliyah: Taliyah,
+    Smolder: smolder,
+    Seraphine: seraphine,
+    Rammus: rammus,
+    Nilah: nilah,
+    MissFortune: MissFortune,
+    Mel: mel,
+    MasterYi: MasterYi,
+    LeeSin: LeeSin,
+    Kayn: kayn,
+    Katarina: katarina,
+    Kalista: kalista,
+    Jax: Jax,
+    JaarvanIV: JaarvanIV,
+    Irelia: Irelia,
+    Gwen: gwen,
+    Graves: Graves,
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -171,8 +217,14 @@ const Dashboard = () => {
             return (
               <Card key={index}>
                 <CardImgWrapper>{
-                  <CardImg src={item.big_image_url
-                  } />
+                  <CardImg src={item.big_image_url}
+                    onClick={() => {
+                      const soundFile = soundMap[item.name];
+                      const audio = new Audio(soundFile);
+                      audio.volume = 0.4;
+                      audio.play();
+                    }}
+                  />
                 }
                 </CardImgWrapper>
                 <CardDetailWrapper flex="0.2">
