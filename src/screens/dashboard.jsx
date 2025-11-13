@@ -23,7 +23,6 @@ import MissFortune from "../assets/sounds/Miss Fortune.mp3";
 import mel from "../assets/sounds/mel.mp3";
 import MasterYi from "../assets/sounds/Master Yi.mp3";
 import LeeSin from "../assets/sounds/Lee Sin.mp3";
-import kayn from "../assets/sounds/kayn.mp3";
 import katarina from "../assets/sounds/katarina.mp3";
 import kalista from "../assets/sounds/kalista.mp3";
 import Jax from "../assets/sounds/Jax.mp3";
@@ -59,7 +58,6 @@ const Dashboard = () => {
     Mel: mel,
     MasterYi: MasterYi,
     LeeSin: LeeSin,
-    Kayn: kayn,
     Katarina: katarina,
     Kalista: kalista,
     Jax: Jax,
