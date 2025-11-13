@@ -26,7 +26,7 @@ const useFetchChampion=()=>{
         setLoading(false);
       });
   }, []);
-  return {data ,loading}
+  return { data, loading, setData }
 }
 export default useFetchChampion;
  

@@ -35,26 +35,18 @@ justify-content:center;
 align-items:center;
 `;
 
-
-
 export const ListingWrapper = styled.div`
-    display: flex
-;
+    display: flex;
     flex: 0.9;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    /* height: 500px; */
     overflow: auto;
-  
 `;
 export const LoaderWrapper = styled.div`
     display: flex;
     flex: 0.9;
     align-items:center;
     justify-content: center;
-    /* height: 500px; */
-    
-  
 `;
 export const Card = styled.div`
   width: 250px;
@@ -66,26 +58,37 @@ export const Card = styled.div`
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 `;
 export const CardImgWrapper = styled.div`
-  
   display:flex;
   flex:0.7;
 `;
-export const CardDetailWrapper = styled.div`
+export const CardDetailWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !["height", "display", "flex", "backgroundColor"].includes(prop),
+})`
   display:flex;
-  flex:0.2;
+  flex:${(props) => props.flex};
+  background-color:${(props) => props.backgroundColor};
+  height:${(props) => props.height};
 `;
-export const CardAvatarWrapper = styled.div`
+export const CardAvatarWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !["flex"].includes(prop),
+})`
   display:flex;
   flex-direction:row;
-  flex:0.3;
+  flex:${(props) => props.flex};
   align-items:center;
   justify-content:center;
 `;
 
-export const CardNameWrapper = styled.div`
+export const CardNameWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) =>
+    !["flex"].includes(prop),
+})`
   display:flex;
   flex-direction:column;
-  flex:0.7;
+  flex:${(props) => props.flex};
+  justify-content:center;
 `;
 export const CharacterNameWrapper = styled.div.withConfig({
   shouldForwardProp: (prop) =>
@@ -116,6 +119,16 @@ export const ButtonWrapper = styled.div`
   display:flex;
   justify-content: space-around;
   flex:0.1;
+`;
+
+export const HoverWrapper = styled.span`
+    display: inline-block; 
+    transition: all 0.3s ease-in-out;
+    
+    &:hover {
+        filter: drop-shadow(0 0 10px white);
+        transform: scale(1.15);
+    }
 `;
 
 export const ChampCardWrapper = styled.div`
@@ -248,4 +261,24 @@ export const SortInfo = styled.span`
   font-size:16px;
   color:black;
   margin-left:8px;
+`;
+
+export const Remove = styled.div`
+display:flex;
+flex:0.1;
+cursor:pointer;
+align-items:center;
+justify-content:center;
+font-size:18px;
+font-weight:bold;
+color:red;
+`;
+
+export const FavHeader = styled.div`
+display:flex;
+flex:0.1;
+height:90px;
+font-size:20px;
+font-weight:bold;
+align-items:center;
 `;
