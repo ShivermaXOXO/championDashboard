@@ -25,7 +25,7 @@ import LeeSin from "../assets/sounds/leesin.mp3";
 import katarina from "../assets/sounds/katarina.mp3";
 import kalista from "../assets/sounds/kalista.mp3";
 import Jax from "../assets/sounds/jax.mp3";
-import JaarvanIV from "../assets/sounds/jaarvaniv.mp3";
+import JaarvanIV from "../assets/sounds/jarvaniv.mp3";
 import Irelia from "../assets/sounds/irelia.mp3";
 import Gwen from "../assets/sounds/gwen.mp3";
 import Graves from "../assets/sounds/graves.mp3";
